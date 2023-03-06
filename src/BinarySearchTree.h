@@ -47,11 +47,18 @@ class BinarySearchTree
     BinarySearchTree( const BinarySearchTree & rhs ) {
         // TODO
     }
-    BinarySearchTree( BinarySearchTree && rhs ) {
-        // TODO
+    BinarySearchTree( BinarySearchTree && rhs ): _root(nullptr), _size(rhs._size) {
+        _root->left = rhs._root->left;
+        _root->right = rhs._root->right;
+        _root->element = rhs._root->element;
+
+        rhs._root = nullptr;
+        rhs._size = 0;
     }
     ~BinarySearchTree() {
-        // TODO
+        clear();
+        _size = 0;
+        _root = nullptr;
     }
 
     const_reference min() const { return min( _root )->element; }
@@ -64,7 +71,7 @@ class BinarySearchTree
     value_type & find( const key_type & key ) { return find( key, _root )->element.second; }
     const value_type & find( const key_type & key ) const { return find( key, _root )->element.second; }
     bool empty() const {
-        // TODO
+        return _size == 0;
     }
     size_type size() const {
         return _size;
@@ -87,10 +94,43 @@ class BinarySearchTree
 
   private:
     void insert( const_reference x, node_ptr & t ) {
-        // TODO
+        if(t == nullptr)
+        {
+            t = new BinaryNode(x, nullptr,nullptr);
+            _size++;
+        }
+        else if(comp(x.first, t->element.first))
+        {
+            insert(x, t->left);
+        }
+        else if(comp(t->element.first,x.first))
+        {
+            insert(x, t->right);
+        }
+        else
+        {
+            t->element = x;
+        }
     }
     void insert( pair && x, node_ptr & t ) {
-        // TODO
+        if(t == nullptr)
+        {
+            t = new BinaryNode(std::move(x),nullptr,nullptr);
+            _size++;
+        }
+        else if(comp(x.first, t->element.first))
+        {
+            insert(x, t->left);
+        }
+        else if(comp(t->element.first,x.first))
+        {
+            insert(x, t->right);
+            
+        }
+        else
+        {
+            t->element = std::move(x);
+        }
     }
 
     void erase( const key_type & x, node_ptr & t ) {
@@ -115,7 +155,12 @@ class BinarySearchTree
     }
 
     void clear( node_ptr & t ) {
-        // TODO
+        if(t != nullptr)
+        {
+            clear(t->left);
+            clear(t->right);
+            delete t;
+        }
     }
     
     node_ptr clone ( const_node_ptr t ) const {
