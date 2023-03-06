@@ -77,6 +77,7 @@ class BinarySearchTree
     void clear() {
         clear( _root );
         _size = 0;
+        _root = nullptr;
     }
     void insert( const_reference x ) { insert( x, _root ); }
     void insert( pair && x ) { insert( std::move( x ), _root ); }
@@ -247,12 +248,19 @@ class BinarySearchTree
     }
 
     void clear( node_ptr & t ) {
-        if(t != nullptr)
+        if(t == nullptr)
+        {
+            return;
+        }
+        if(t->left != nullptr)
         {
             clear(t->left);
-            clear(t->right);
-            delete t;
         }
+        if(t->right != nullptr)
+        {
+            clear(t->right);
+        }
+        delete t;
     }
     
     node_ptr clone ( const_node_ptr t ) const {
