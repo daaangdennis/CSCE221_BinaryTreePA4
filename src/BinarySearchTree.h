@@ -120,11 +120,11 @@ class BinarySearchTree
         }
         else if(comp(x.first, t->element.first))
         {
-            insert(x, t->left);
+            insert(std::move(x), t->left);
         }
         else if(comp(t->element.first,x.first))
         {
-            insert(x, t->right);
+            insert(std::move(x), t->right);
             
         }
         else
@@ -145,13 +145,47 @@ class BinarySearchTree
     }
 
     bool contains( const key_type & x, const_node_ptr t ) const {
-        // TODO
+        if(find(x,t) == nullptr)
+        {
+            return false;
+        }
+        return true;
     }
     node_ptr find( const key_type & key, node_ptr t ) {
-        // TODO
+        if(t == nullptr)
+        {
+            return nullptr;
+        }
+        else if(comp(key, t->element.first))
+        {
+            find(key, t->left);
+        }
+        else if(comp(t->element.first, key))
+        {
+            find(key, t->right);
+        }
+        else
+        {
+            return t;
+        }
     }
     const_node_ptr find( const key_type & key, const_node_ptr t ) const {
-        // TODO
+        if(t == nullptr)
+        {
+            return nullptr;
+        }
+        else if(comp(key, t->element.first))
+        {
+            find(key, t->left);
+        }
+        else if(comp(t->element.first, key))
+        {
+            find(key, t->right);
+        }
+        else
+        {
+            return t;
+        }
     }
 
     void clear( node_ptr & t ) {
