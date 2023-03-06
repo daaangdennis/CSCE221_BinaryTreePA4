@@ -134,14 +134,51 @@ class BinarySearchTree
     }
 
     void erase( const key_type & x, node_ptr & t ) {
-        // TODO
+        if(comp(x, t->element.first))
+        {
+            erase(x, t->left);
+        }
+        else if(comp(t->element.first, x))
+        {
+            erase(x, t->right);
+        }
+        else if(t->left != nullptr && t->right != nullptr)
+        {
+            t->element = min(t->right)->element;  
+            node_ptr temp = min(t->right)->right;
+            delete min(t->right);
+            find(min(temp)->element.first,_root)->left = temp;
+        }
+        else
+        {
+            node_ptr temp = t;
+            if(t->left != nullptr)
+            {
+                t = t->left;
+            }
+            else
+            {
+                t = t->right;
+            }
+            delete temp;
+        }
+
     }
 
     const_node_ptr min( const_node_ptr t ) const {
-        // TODO
+        while (t->left != nullptr)
+        {
+            t = t->left;
+        }
+        return t;
+        
     }
     const_node_ptr max( const_node_ptr t ) const {
-        // TODO
+        while (t->right != nullptr)
+        {
+            t = t->right;
+        }
+        return t;
     }
 
     bool contains( const key_type & x, const_node_ptr t ) const {
