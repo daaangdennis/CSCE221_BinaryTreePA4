@@ -44,8 +44,8 @@ class BinarySearchTree
 
   public:
     BinarySearchTree(): _root(nullptr), _size(0) {}
-    BinarySearchTree( const BinarySearchTree & rhs ) {
-        // TODO
+    BinarySearchTree( const BinarySearchTree & rhs ): _size(rhs._size) {
+        _root = clone(rhs._root);
     }
     BinarySearchTree( BinarySearchTree && rhs ): _size(rhs._size) {
         _root = rhs._root;
@@ -54,8 +54,6 @@ class BinarySearchTree
     }
     ~BinarySearchTree() {
         clear();
-        _size = 0;
-        _root = nullptr;
     }
 
     const_reference min() const { return min( _root )->element; }
@@ -84,7 +82,13 @@ class BinarySearchTree
     void erase( const key_type & x ) { erase(x, _root); }
 
     BinarySearchTree & operator=( const BinarySearchTree & rhs ) {
-        // TODO
+        if(this != &rhs)
+        {
+            this->~BinarySearchTree();
+            _root = clone(rhs._root);
+            _size = rhs._size;
+        }
+        return *this;
     }
     BinarySearchTree & operator=( BinarySearchTree && rhs ) {
         if(this != &rhs)
@@ -264,7 +268,21 @@ class BinarySearchTree
     }
     
     node_ptr clone ( const_node_ptr t ) const {
-        // TODO
+        if(t == nullptr)
+        {
+            return nullptr;
+        }
+
+        node_ptr sub = new BinaryNode(t->element, nullptr, nullptr);
+        if(t->left != nullptr)
+        {
+            sub->left = clone(t->left);
+        }
+        if(t->right != nullptr)
+        {
+            sub->right = clone(t->right);
+        }
+        return sub;
     }
 
   public:
