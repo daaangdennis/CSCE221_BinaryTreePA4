@@ -43,9 +43,7 @@ class BinarySearchTree
     key_compare comp;
 
   public:
-    BinarySearchTree() {
-        // TODO
-    }
+    BinarySearchTree(): _root(nullptr), _size(0) {}
     BinarySearchTree( const BinarySearchTree & rhs ) {
         // TODO
     }
@@ -59,7 +57,8 @@ class BinarySearchTree
     const_reference min() const { return min( _root )->element; }
     const_reference max() const { return max( _root )->element; }
     const_reference root() const {
-        // TODO
+        const_reference root = _root->element;
+        return root;
     }
     bool contains( const key_type & x ) const { return contains( x, _root ); }
     value_type & find( const key_type & key ) { return find( key, _root )->element.second; }
@@ -68,7 +67,7 @@ class BinarySearchTree
         // TODO
     }
     size_type size() const {
-        // TODO
+        return _size;
     }
 
     void clear() {
