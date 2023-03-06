@@ -47,11 +47,8 @@ class BinarySearchTree
     BinarySearchTree( const BinarySearchTree & rhs ) {
         // TODO
     }
-    BinarySearchTree( BinarySearchTree && rhs ): _root(nullptr), _size(rhs._size) {
-        _root->left = rhs._root->left;
-        _root->right = rhs._root->right;
-        _root->element = rhs._root->element;
-
+    BinarySearchTree( BinarySearchTree && rhs ): _size(rhs._size) {
+        _root = rhs._root;
         rhs._root = nullptr;
         rhs._size = 0;
     }
@@ -89,7 +86,15 @@ class BinarySearchTree
         // TODO
     }
     BinarySearchTree & operator=( BinarySearchTree && rhs ) {
-        // TODO
+        if(this != &rhs)
+        {
+            this->~BinarySearchTree();
+            _root = rhs._root;
+            _size = rhs._size;
+            rhs._root = nullptr;
+            rhs._size = 0;
+        }
+        return *this;
     }
 
   private:
@@ -142,25 +147,41 @@ class BinarySearchTree
         {
             erase(x, t->right);
         }
-        else if(t->left != nullptr && t->right != nullptr)
-        {
-            t->element = min(t->right)->element;  
-            node_ptr temp = min(t->right)->right;
-            delete min(t->right);
-            find(min(temp)->element.first,_root)->left = temp;
-        }
         else
         {
-            node_ptr temp = t;
-            if(t->left != nullptr)
+            if(t == nullptr)
             {
-                t = t->left;
+                return;
+            }
+            else if(t->left == nullptr && t->right == nullptr)
+            {
+                //When node has no children
+                delete t;
+                t = nullptr;
+                return;
+            }
+            else if(t->left != nullptr && t->right != nullptr)
+            {
+                //When node has 2 children
+                t->element = min(t->right)->element;
+                erase(min(t->right)->element.first, t);
+
             }
             else
             {
-                t = t->right;
+                //When node has 1 child
+                node_ptr temp = t;
+                if(t->left != nullptr)
+                {
+                    t = t->left;
+                }
+                else
+                {
+                    t = t->right;
+                }
+                delete temp;
             }
-            delete temp;
+            
         }
 
     }
