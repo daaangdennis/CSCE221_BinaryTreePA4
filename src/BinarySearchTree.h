@@ -144,6 +144,10 @@ class BinarySearchTree
     }
 
     void erase( const key_type & x, node_ptr & t ) {
+        if(t == nullptr)
+        {
+            return;
+        }
         if(comp(x, t->element.first))
         {
             erase(x, t->left);
@@ -154,6 +158,7 @@ class BinarySearchTree
         }
         else
         {
+            //target node found
             if(t == nullptr)
             {
                 return;
@@ -163,13 +168,13 @@ class BinarySearchTree
                 //When node has no children
                 delete t;
                 t = nullptr;
-                return;
+                _size--;
             }
             else if(t->left != nullptr && t->right != nullptr)
             {
                 //When node has 2 children
                 t->element = min(t->right)->element;
-                erase(min(t->right)->element.first, t);
+                erase(min(t->right)->element.first, t->right);
 
             }
             else
@@ -184,7 +189,9 @@ class BinarySearchTree
                 {
                     t = t->right;
                 }
+
                 delete temp;
+                _size--;
             }
             
         }
